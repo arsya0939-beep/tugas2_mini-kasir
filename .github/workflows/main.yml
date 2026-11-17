@@ -3,7 +3,8 @@ name: Build C++ EXE
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
@@ -14,12 +15,20 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Compile C++
+      - name: Setup MinGW
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          update: true
+          install: mingw-w64-x86_64-gcc
+
+      - name: Compile main.cpp
+        shell: msys2 {0}
         run: |
-          g++ src/main.cpp -o main.exe -static -std=c++17
+          g++ main.cpp -o main.exe -std=c++17 -static -static-libgcc -static-libstdc++
 
       - name: Upload EXE
         uses: actions/upload-artifact@v4
         with:
-          name: main-exe
+          name: Mini-Kasir-EXE
           path: main.exe
