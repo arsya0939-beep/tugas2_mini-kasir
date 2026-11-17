@@ -1,0 +1,25 @@
+
+name: Build C++ EXE
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Compile C++
+        run: |
+          g++ src/main.cpp -o main.exe -static -std=c++17
+
+      - name: Upload EXE
+        uses: actions/upload-artifact@v4
+        with:
+          name: main-exe
+          path: main.exe
